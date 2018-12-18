@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>登录页面</title>
+    <style type="text/css">
+        .dv_error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<form action="/RSNA_SHOW/user/login.do" method="get">
+    <label>账号：</label><input type="text" id="username" name="username"><br />
+    <label>密码：</label><input type="password" id="password" name="password"><br />
+    <label>验证码：</label><input type="text" id="code" name="vcode"><img id="img1" src="/user/vcode.do" onclick="changeImg()" /><a href="javascript:void(0)" onclick="changeImg()">看不清换一张</a><br />
+    <input type="button" onclick="check()" value="登录">
+</form>
+<script src="plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script type="text/javascript">
+    function getContextPath(){
+        return '/';
+    }
+    $(document).ready(function (){
+        $.ajax({
+            url: getContextPath()+"user/islogin.do",
+            type: "get",
+            data: {
+            },
+            success: function (res) {  //res是server端响应
+                var response = res; //将json字符串解析为json对象（即JS对象）
+                if (response['status']==123) {
+                    console.log(response['status']);
+                } else {
+                    location.href = "/index.html";  //跳转至首页
+                    // alert("你已经登陆成功")
+                }
+            }
+        })
+
+    });
+    function check(){
+        var username = document.getElementById("username")
+        var password = document.getElementById("password")
+        var code = document.getElementById("code")
+        if(username.value == ""){
+            alert("请输入用户名")
+        }else if(password.value == ""){
+            alert("请输入密码")
+        }else if(code.value == ""){
+            alert("请输入验证码");
+        }else{
+            document.forms[0].submit()
+        }
+    }
+    function changeImg(){
+        var img1 = document.getElementById("img1")
+        img1.src="/user/vcode.do?num:"+Math.random();
+    }
+</script>
+</body>
+</html>
